@@ -13,6 +13,10 @@ AC_CONFIG_SRCDIR([LICENSE])
 AC_CONFIG_AUX_DIR([scripts])
 AC_CONFIG_MACRO_DIR([m4])
 
+####################
+#  Check environments - `host`, `target` and `build`
+CHECK_CANONICAL_SYSTEM
+
 AM_INIT_AUTOMAKE([1.9 dist-bzip2 foreign subdir-objects])
 
 ####################
