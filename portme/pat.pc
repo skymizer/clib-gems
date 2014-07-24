@@ -1,0 +1,11 @@
+prefix=/Users/lubatang/Skymizer/SysRoot
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: pat
+Description: Performance Analysis Toolkit
+Requires:
+Version: 2.6.2-chungho
+Libs: -L${libdir} -lpat
+Cflags: -I${includedir}
