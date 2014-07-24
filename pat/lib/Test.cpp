@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 #include <pat/pat.h>
-#include <pat/Listeners/PrettyResultPrinter.h>
+#include <pat/PrettyResultPrinter.h>
 #include <time.h>
 #include <cassert>
 

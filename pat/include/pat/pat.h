@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <pat/Support/OStrStream.h>
+#include <pat/OStrStream.h>
 
 #define PAT_VERNUM 0x24
 

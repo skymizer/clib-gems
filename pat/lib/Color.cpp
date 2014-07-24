@@ -6,7 +6,7 @@
 // See LICENSE for details.
 //
 //===----------------------------------------------------------------------===//
-#include <pat/ADT/Color.h>
+#include <pat/Color.h>
 #include <ostream>
 
 using namespace pat;

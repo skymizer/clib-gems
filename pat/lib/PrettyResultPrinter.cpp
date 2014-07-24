@@ -6,8 +6,8 @@
 // See LICENSE for details.
 //
 //===----------------------------------------------------------------------===//
-#include <pat/Listeners/PrettyResultPrinter.h>
-#include <pat/ADT/Color.h>
+#include <pat/PrettyResultPrinter.h>
+#include <pat/Color.h>
 #include <iostream>
 
 using namespace pat;

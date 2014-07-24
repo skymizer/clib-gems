@@ -6,7 +6,7 @@
 // See LICENSE for details.
 //
 //===----------------------------------------------------------------------===//
-#include <pat/Support/ManagedStatic.h>
+#include <pat/ManagedStatic.h>
 #include <cassert>
 
 using namespace pat;
