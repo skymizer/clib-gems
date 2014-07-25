@@ -13,7 +13,7 @@ include common.mak
 # Set Up PORT_DIR
 #===---------------------------------------------------------------------===# 
 ifndef PORT_DIR
-  ARCH=$(shell if [[ `uname 2> /dev/null` ]] ; then uname -m | tr A-Z a-z; fi)
+  ARCH=$(shell if [ ! -z "`uname 2> /dev/null`" ] ; then uname -m | tr A-Z a-z; fi)
   OS=$(shell uname -s | tr A-Z a-z)
   PORT_DIR=$(ARCH)-$(OS)
 endif # PORT_DIR
