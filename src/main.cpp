@@ -10,6 +10,7 @@
 #include "regex_test.h"
 #include "malloc_test.h"
 #include "pthread_test.h"
+#include "stdio_test.h"
 
 //===----------------------------------------------------------------------===//
 // Helpers
@@ -113,6 +114,19 @@ PAT_F(regex_case, search1)
 PAT_F(regex_case, search2)
 {
   RUN(b_regex_search, "a{25}b");
+}
+
+//===----------------------------------------------------------------------===//
+// Std I/O Test
+//===----------------------------------------------------------------------===//
+PAT_F(stdio_case, putcgetc)
+{
+  RUN(b_stdio_putcgetc, 0);
+}
+
+PAT_F(stdio_case, pubcgetc_unlocked)
+{
+  RUN(b_stdio_putcgetc_unlocked, 0);
 }
 
 /** \fn main
