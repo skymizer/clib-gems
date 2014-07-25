@@ -8,6 +8,7 @@
 //===----------------------------------------------------------------------===//
 #include <pat/pat.h>
 #include "malloc_test.h"
+#include "pthread_test.h"
 
 //===----------------------------------------------------------------------===//
 // Helpers
@@ -73,6 +74,29 @@ PAT_F(malloc_case, thread_stress_1)
 PAT_F(malloc_case, thread_local_1)
 {
   RUN(b_malloc_thread_local, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// Pthread Test Functions
+//===----------------------------------------------------------------------===//
+PAT_F(pthread_case, createjoin1)
+{
+  RUN(b_pthread_createjoin_serial1, 0);
+}
+
+PAT_F(pthread_case, createjoin2)
+{
+  RUN(b_pthread_createjoin_serial2, 0);
+}
+
+PAT_F(pthread_case, create1)
+{
+  RUN(b_pthread_create_serial1, 0);
+}
+
+PAT_F(pthread_case, uselesslock)
+{
+  RUN(b_pthread_uselesslock, 0);
 }
 
 /** \fn main
