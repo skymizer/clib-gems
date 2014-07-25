@@ -7,13 +7,18 @@
 //
 //===----------------------------------------------------------------------===//
 #include <pat/pat.h>
-#include "malloc.h"
+#include "malloc_test.h"
 
 //===----------------------------------------------------------------------===//
 // Helpers
 //===----------------------------------------------------------------------===//
 /** \fn run_bench
  *  \brief run_bench is a function wrapper to avoid inter-procedure optimization
+ *
+ *  If we run the function directly, then compiler has highly chance to inline
+ *  or unroll the function body. Our purpose is to run the original function
+ *  body and all improvement should be counted in C library, not benchmark
+ *  itself.
  */
 int run_bench(size_t (*bench)(void *), void *params)
 {
@@ -28,7 +33,7 @@ int run_bench(size_t (*bench)(void *), void *params)
   }
 
 //===----------------------------------------------------------------------===//
-// Test Functions
+// Malloc Test Functions
 //===----------------------------------------------------------------------===//
 PAT_F(malloc_case, sparse_1)
 {
