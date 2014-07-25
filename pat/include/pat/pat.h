@@ -26,6 +26,7 @@ class Test;
 namespace testing {
 namespace internal {
 class Timer;
+class Perf;
 
 //===----------------------------------------------------------------------===//
 // ADT
@@ -166,6 +167,7 @@ public:
 private:
   int m_Counter;
   internal::Timer* m_pTimer;
+  internal::Perf* m_pPerf;
   PerfPartResult* m_pPerfResult;
 };
 
@@ -227,12 +229,14 @@ class PAT_PUBLIC PerfPartResult : public PartResult
 public:
   PerfPartResult(const std::string& pFileName, int pLoC);
 
-  Interval getPerformance() const;
+  Interval getTimerNum() const;
+  Interval getPerfEventNum() const;
 
-  void setPerformance(Interval pNum);
+  void setPerformance(Interval pTimerNum, Interval pEventNum);
 
 private:
-  Interval m_PerfNum;
+  Interval m_PerfTimerNum;
+  Interval m_PerfEventNum;
 };
 
 /** \class TestResult

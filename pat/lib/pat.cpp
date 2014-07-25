@@ -8,6 +8,7 @@
 //===----------------------------------------------------------------------===//
 #include <pat/pat.h>
 #include <pat/Timer.h>
+#include <pat/Perf.h>
 #include <pat/ManagedStatic.h>
 #include <pat/OStrStream.h>
 #include <vector>
@@ -133,13 +134,20 @@ testing::PerfIterator::PerfIterator(const char* pFile, int pLine)
   m_pPerfResult = testing::UnitTest::self()->addPerfPartResult(pFile, pLine);
   m_pTimer = new internal::Timer();
   m_pTimer->start();
+
+  m_pPerf = new internal::Perf();
+  m_pPerf->start();
 }
 
 testing::PerfIterator::~PerfIterator()
 {
   m_pTimer->stop();
-  m_pPerfResult->setPerformance(m_pTimer->interval());
+  m_pPerf->stop();
+
+  m_pPerfResult->setPerformance(m_pTimer->interval(), m_pPerf->interval());
+
   delete m_pTimer;
+  delete m_pPerf;
 }
 
 bool testing::PerfIterator::next()
@@ -182,16 +190,23 @@ testing::PerfPartResult::PerfPartResult(const std::string& pFileName,
   : PartResult(pFileName, pLoC) {
 }
 
-testing::Interval testing::PerfPartResult::getPerformance() const
+testing::Interval testing::PerfPartResult::getTimerNum() const
 {
-  return m_PerfNum;
+  return m_PerfTimerNum;
 }
 
-void testing::PerfPartResult::setPerformance(testing::Interval pNum)
+testing::Interval testing::PerfPartResult::getPerfEventNum() const
 {
-  m_PerfNum = pNum;
+  return m_PerfEventNum;
+}
+
+void testing::PerfPartResult::setPerformance(testing::Interval pTimerNum,
+                                             testing::Interval pEventNum)
+{
+  m_PerfTimerNum = pTimerNum;
+  m_PerfEventNum = pEventNum;
   OStrStream os(m_Message);
-  os << pNum << " ns";
+  os << pTimerNum << " ns";
 }
 
 //===----------------------------------------------------------------------===//
