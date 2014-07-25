@@ -1,0 +1,25 @@
+{
+  "casename" : "string",
+  "functions" : [
+    {
+      "name"  : "strstr1",
+      "score" : 23464620.7
+    },
+    {
+      "name"  : "strstr2",
+      "score" : 31449471.2
+    },
+    {
+      "name"  : "strstr3",
+      "score" : 23084728.7
+    },
+    {
+      "name"  : "strstr4",
+      "score" : 23052754.6
+    },
+    {
+      "name"  : "strstr5",
+      "score" : 26272066.1
+    }
+  ]
+}
