@@ -10,6 +10,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <cassert>
+#include <iostream>
 
 #if defined(HAVE_SYS_TIMES_H)
 #include <sys/times.h>
@@ -17,6 +18,16 @@
 
 #if defined(HAVE_SYS_TIME_H) && defined(ENABLE_GETTIMEOFDAY)
 #include <sys/time.h>
+#endif
+
+#if defined(HAVE_LINUX_PERF_EVENT_H)
+#include <linux/perf_event.h>
+#include <sys/ioctl.h>
+#include <cstring>
+#include <cstdlib>
+#ifndef __NR_perf_event_open
+#define __NR_perf_event_open 364
+#endif
 #endif
 
 namespace pat {
@@ -33,11 +44,33 @@ public:
     if (-1 == g_ClkTick) {
       g_ClkTick = sysconf(_SC_CLK_TCK);
       assert((0 < g_ClkTick) && "sysconf error");
+#if defined(HAVE_LINUX_PERF_EVENT_H)
+      struct perf_event_attr attr;
+
+      memset(&attr, 0, sizeof(attr));
+
+      attr.inherit = 1;
+      attr.disabled = 1;
+      attr.type = PERF_TYPE_SOFTWARE;
+      attr.config = PERF_COUNT_SW_TASK_CLOCK;
+      attr.size = sizeof(attr);
+
+      m_Fd = syscall(__NR_perf_event_open, &attr, 0, -1, -1, 0);
+#endif
     }
+  }
+  ~TimerImpl() {
+#if defined(HAVE_LINUX_PERF_EVENT_H)
+    close(m_Fd);
+#endif
   }
 
    testing::Interval ns() {
-#if defined(HAVE_CLOCK_GETTIME) && defined(ENABLE_CLOCK_GETTIME)
+#if defined(HAVE_LINUX_PERF_EVENT_H)
+     unsigned long long runtime;
+     read(m_Fd, &runtime, sizeof(unsigned long long));
+     return runtime;
+#elif defined(HAVE_CLOCK_GETTIME) && defined(ENABLE_CLOCK_GETTIME)
      struct timespec ts;
      int r = clock_gettime(CLOCK_MONOTONIC, &ts);
      return r == -1 ? -1 : ts.tv_sec * 1000000000LL + ts.tv_nsec;
@@ -53,10 +86,16 @@ public:
   }
 
   void start() {
+#if defined(HAVE_LINUX_PERF_EVENT_H)
+    ioctl(m_Fd, PERF_EVENT_IOC_ENABLE);
+#endif
     assert(-1 != (m_Start = ns()) && "fail to get starting time");
   }
 
   void stop() {
+#if defined(HAVE_LINUX_PERF_EVENT_H)
+    ioctl(m_Fd, PERF_EVENT_IOC_DISABLE);
+#endif
     assert(-1 != (m_End = ns()) && "fail to get elapsed time");
   }
 
@@ -69,6 +108,8 @@ private:
   testing::Interval m_End;
 
   static long g_ClkTick;
+
+  int m_Fd;
 };
 
 long TimerImpl::g_ClkTick = -1;
