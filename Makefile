@@ -52,7 +52,7 @@ PAT_INCLUDES = -I$(PAT_DIR)/include -I$(PORT_DIR)
 
 all: create_folders $(OBJECTS) libpat
 	$(CXX) $(CXXFLAGS) -c -o $(OBJ_DIR)/main.o $(SRC_DIR)/main.cpp $(PAT_INCLUDES)
-	$(CXX) $(LDFLAGS) $(XLDFLAGS) -o libc-bench $(OBJECTS) $(OBJ_DIR)/main.o -L$(OBJ_DIR) -lpat
+	$(CXX) $(LDFLAGS) $(XLDFLAGS) -o libc-bench $(OBJECTS) $(OBJ_DIR)/main.o -L$(OBJ_DIR) -lpat -lpthread
 
 create_folders:
 	$(MKDIR) $(OBJ_DIR)
