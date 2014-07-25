@@ -11,6 +11,7 @@
 #include "malloc_test.h"
 #include "pthread_test.h"
 #include "stdio_test.h"
+#include "string_test.h"
 
 //===----------------------------------------------------------------------===//
 // Helpers
@@ -127,6 +128,49 @@ PAT_F(stdio_case, putcgetc)
 PAT_F(stdio_case, pubcgetc_unlocked)
 {
   RUN(b_stdio_putcgetc_unlocked, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// String Test
+//===----------------------------------------------------------------------===//
+PAT_F(string_case, strstr1)
+{
+  RUN(b_string_strstr, "abcdefghijklmnopqrstuvwxyz");
+}
+
+PAT_F(string_case, strstr2)
+{
+  RUN(b_string_strstr, "azbycxdwevfugthsirjqkplomn");
+}
+
+PAT_F(string_case, strstr3)
+{
+  RUN(b_string_strstr, "aaaaaaaaaaaaaacccccccccccc");
+}
+
+PAT_F(string_case, strstr4)
+{
+  RUN(b_string_strstr, "aaaaaaaaaaaaaaaaaaaaaaaaac");
+}
+
+PAT_F(string_case, strstr5)
+{
+  RUN(b_string_strstr, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaac");
+}
+
+PAT_F(string_case, memset1)
+{
+  RUN(b_string_memset, 0);
+}
+
+PAT_F(string_case, strchr1)
+{
+  RUN(b_string_strchr, 0);
+}
+
+PAT_F(string_case, strlen1)
+{
+  RUN(b_string_strlen, 0);
 }
 
 /** \fn main
