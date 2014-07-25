@@ -32,7 +32,7 @@ int run_bench(size_t (*bench)(void *), void *params)
 }
 
 #define RUN(_func_, _params_) \
-  PERFORM { run_bench((_func_), (_params_)); }
+  PERFORM { run_bench((_func_), (void*)(_params_)); }
 
 //===----------------------------------------------------------------------===//
 // Malloc Test Functions

@@ -13,9 +13,9 @@
 extern "C" {
 #endif
 
-size_t b_regex_compile(const char *s);
+size_t b_regex_compile(void *s);
 
-size_t b_regex_search(const char *s);
+size_t b_regex_search(void *s);
 
 #ifdef __cplusplus
 } // end of extern

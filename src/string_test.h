@@ -13,13 +13,13 @@
 extern "C" {
 #endif
 
-size_t b_string_strstr(char *dummy);
+size_t b_string_strstr(void *dummy);
 
-size_t b_string_memset(char *dummy);
+size_t b_string_memset(void *dummy);
 
-size_t b_string_strchr(char *dummy);
+size_t b_string_strchr(void *dummy);
 
-size_t b_string_strlen(char *dummy);
+size_t b_string_strlen(void *dummy);
 
 #ifdef __cplusplus
 } // end of extern

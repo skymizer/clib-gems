@@ -4,7 +4,7 @@
 
 #define BUFLEN 500000
 
-size_t b_string_strstr(char *dummy)
+size_t b_string_strstr(void *dummy)
 {
 	const char *needle = dummy;
 	size_t l = strlen(needle);
@@ -25,7 +25,7 @@ size_t b_string_strstr(char *dummy)
 	return cs;
 }
 
-size_t b_string_memset(char *dummy)
+size_t b_string_memset(void *dummy)
 {
 	char *buf = (char*) malloc(BUFLEN);
 	size_t i;
@@ -35,7 +35,7 @@ size_t b_string_memset(char *dummy)
 	return 0;
 }
 
-size_t b_string_strchr(char *dummy)
+size_t b_string_strchr(void *dummy)
 {
 	char *buf = (char*) malloc(BUFLEN);
 	size_t i;
@@ -51,7 +51,7 @@ size_t b_string_strchr(char *dummy)
 	return cs;
 }
 
-size_t b_string_strlen(char *dummy)
+size_t b_string_strlen(void *dummy)
 {
 	char *buf = (char*) malloc(BUFLEN);
 	size_t i;

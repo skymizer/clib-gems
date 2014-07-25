@@ -4,7 +4,7 @@
 #include <regex.h>
 #include <locale.h>
 
-size_t b_regex_compile(const char *s)
+size_t b_regex_compile(void *s)
 {
 	regex_t re;
 	size_t i;
@@ -15,7 +15,7 @@ size_t b_regex_compile(const char *s)
 	}
 }
 
-size_t b_regex_search(const char *s)
+size_t b_regex_search(void *s)
 {
 	char buf[260000];
 	regex_t re;
