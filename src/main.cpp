@@ -12,6 +12,7 @@
 #include "pthread_test.h"
 #include "stdio_test.h"
 #include "string_test.h"
+#include "utf8_test.h"
 
 //===----------------------------------------------------------------------===//
 // Helpers
@@ -171,6 +172,19 @@ PAT_F(string_case, strchr1)
 PAT_F(string_case, strlen1)
 {
   RUN(b_string_strlen, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// UTF-8 Test
+//===----------------------------------------------------------------------===//
+PAT_F(utf8_case, bigbuf)
+{
+  RUN(b_utf8_bigbuf, 0);
+}
+
+PAT_F(utf8_case, one_by_one)
+{
+  RUN(b_utf8_onebyone, 0);
 }
 
 /** \fn main
