@@ -96,7 +96,6 @@ static unsigned rng(unsigned *r)
 	return *r = *r * 1103515245 + 12345;
 }
 
-
 static void *stress(void *arg)
 {
 	struct foo *foo = (struct foo*) arg;
