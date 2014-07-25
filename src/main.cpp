@@ -7,6 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 #include <pat/pat.h>
+#include "regex_test.h"
 #include "malloc_test.h"
 #include "pthread_test.h"
 
@@ -28,10 +29,7 @@ int run_bench(size_t (*bench)(void *), void *params)
 }
 
 #define RUN(_func_, _params_) \
-  PERFORM { \
-        extern size_t (_func_)(void *); \
-        run_bench((_func_), (_params_)); \
-  }
+  PERFORM { run_bench((_func_), (_params_)); }
 
 //===----------------------------------------------------------------------===//
 // Malloc Test Functions
@@ -97,6 +95,24 @@ PAT_F(pthread_case, create1)
 PAT_F(pthread_case, uselesslock)
 {
   RUN(b_pthread_uselesslock, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// Regular Expression
+//===----------------------------------------------------------------------===//
+PAT_F(regex_case, compile1)
+{
+  RUN(b_regex_compile, "(a|b|c)*d*b");
+}
+
+PAT_F(regex_case, search1)
+{
+  RUN(b_regex_search, "(a|b|c)*d*b");
+}
+
+PAT_F(regex_case, search2)
+{
+  RUN(b_regex_search, "a{25}b");
 }
 
 /** \fn main
