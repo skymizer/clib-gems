@@ -35,7 +35,7 @@ include $(PORT_DIR)/portme.mak
 #===---------------------------------------------------------------------===# 
 SRC_DIR = ./src
 OBJ_DIR = ./objs
-CORE_FILES = malloc pthread regex stdio string utf8
+CORE_FILES = malloc pthread regex stdio string utf8 sprintf
 SOURCES = $(addprefix $(SRC_DIR)/, $(addsuffix .c,$(CORE_FILES)))
 OBJECTS = $(addprefix $(OBJ_DIR)/, $(addsuffix .o,$(CORE_FILES)))
 

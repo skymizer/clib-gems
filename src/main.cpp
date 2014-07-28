@@ -13,6 +13,7 @@
 #include "stdio_test.h"
 #include "string_test.h"
 #include "utf8_test.h"
+#include "sprintf_test.h"
 
 //===----------------------------------------------------------------------===//
 // Helpers
@@ -172,6 +173,11 @@ PAT_F(string_case, strchr1)
 PAT_F(string_case, strlen1)
 {
   RUN(b_string_strlen, 0);
+}
+
+PAT_F(string_case, sprintf1)
+{
+  RUN(b_string_sprintf, 0);
 }
 
 //===----------------------------------------------------------------------===//
