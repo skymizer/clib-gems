@@ -45,12 +45,6 @@ void CSVResultPrinter::OnTestEnd(const testing::TestInfo& pTestInfo)
       std::cout << (*perf)->getTimerNum() << ",";
       ++perf;
     }
-//    perf = pTestInfo.result().performance().begin();
-    // perf_event's results
-//    while (perf != pEnd) {
-//      std::cout<<(*perf)->getPerfEventNum();
-//      ++perf;
-//    }
   }
 }
 
