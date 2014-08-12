@@ -134,7 +134,7 @@ PAT_F(stdio_case, pubcgetc_unlocked)
 
 PAT_F(stdio_case, sprintf1)
 {
-  RUN(b_string_sprintf, 0);
+  RUN(b_stdio_sprintf, 0);
 }
 
 //===----------------------------------------------------------------------===//
