@@ -9,6 +9,7 @@
 #ifndef PAT_LISTENERS_CSV_RESULT_PRINTER_H
 #define PAT_LISTENERS_CSV_RESULT_PRINTER_H
 #include <string>
+#include <fstream>
 #include <pat/pat.h>
 
 namespace pat {
@@ -26,12 +27,16 @@ class TestInfo;
 class CSVResultPrinter : public pat::testing::Listener
 {
 public:
-  static void PrintCaseName(const std::string& pCase, const std::string& pTest);
-  void OnTestProgramStart(const testing::UnitTest& pUnitTest);
-  void OnTestCaseStart(const testing::TestCase& pTestCase);
-  void OnTestStart(const testing::TestInfo& pTestInfo);
+  CSVResultPrinter();
+
+  ~CSVResultPrinter();
+
+  bool open(const std::string& pFileName);
+
   void OnTestEnd(const testing::TestInfo& pTestInfo);
-  void OnTestProgramEnd(const testing::UnitTest& pUnitTest);
+
+private:
+  std::ofstream m_OStream;
 };
 
 } // namespace pat

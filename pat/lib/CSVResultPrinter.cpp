@@ -15,39 +15,37 @@ using namespace pat;
 //===----------------------------------------------------------------------===//
 // CSVResultPrinter
 //===----------------------------------------------------------------------===//
-void CSVResultPrinter::PrintCaseName(const std::string& pCase,
-                                        const std::string& pTest)
-{
+CSVResultPrinter::CSVResultPrinter()
+  : m_OStream() {
 }
 
-void CSVResultPrinter::OnTestProgramStart(const testing::UnitTest& pUnitTest)
+CSVResultPrinter::~CSVResultPrinter()
 {
+  if (m_OStream.is_open())
+    m_OStream.close();
 }
 
-void CSVResultPrinter::OnTestCaseStart(const testing::TestCase& pTestCase)
+bool CSVResultPrinter::open(const std::string& pFileName)
 {
-}
+  if (m_OStream.is_open())
+    return false;
 
-void CSVResultPrinter::OnTestStart(const testing::TestInfo& pTestInfo)
-{
+  m_OStream.open(pFileName.c_str(), std::ostream::out | std::ostream::app);
+  return m_OStream.is_open();
 }
 
 void CSVResultPrinter::OnTestEnd(const testing::TestInfo& pTestInfo)
 {
-  // performance test results
   if (!pTestInfo.result().performance().empty()) {
-    // timer's result
     testing::TestResult::Performance::const_iterator perf =
                                       pTestInfo.result().performance().begin();
     testing::TestResult::Performance::const_iterator pEnd =
                                       pTestInfo.result().performance().end();
     while (perf != pEnd) {
-      std::cout << (*perf)->getTimerNum() << ",";
+      m_OStream << (*perf)->getTimerNum();
       ++perf;
+      if (perf != pEnd)
+        m_OStream << ",";
     }
   }
-}
-
-void CSVResultPrinter::OnTestProgramEnd(const testing::UnitTest& pUnitTest)
-{
 }
