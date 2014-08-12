@@ -1,4 +1,4 @@
-//===- CSVResultPrinter.h ----------------------------------------------===//
+//===- CSVResultPrinter.h -------------------------------------------------===//
 //
 //                     The pat Team
 //
@@ -12,7 +12,6 @@
 #include <pat/pat.h>
 
 namespace pat {
-
 namespace testing {
 
 class UnitTest;

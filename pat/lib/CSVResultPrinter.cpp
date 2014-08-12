@@ -1,4 +1,4 @@
-//===- CSVResultPrinter.cpp ---------------------------------------------===//
+//===- CSVResultPrinter.cpp -----------------------------------------------===//
 //
 //                     The pat Team
 //
@@ -42,7 +42,7 @@ void CSVResultPrinter::OnTestEnd(const testing::TestInfo& pTestInfo)
     testing::TestResult::Performance::const_iterator pEnd =
                                       pTestInfo.result().performance().end();
     while (perf != pEnd) {
-      std::cout<<(*perf)->getTimerNum()<<",";
+      std::cout << (*perf)->getTimerNum() << ",";
       ++perf;
     }
 //    perf = pTestInfo.result().performance().begin();
