@@ -132,6 +132,11 @@ PAT_F(stdio_case, pubcgetc_unlocked)
   RUN(b_stdio_putcgetc_unlocked, 0);
 }
 
+PAT_F(stdio_case, sprintf1)
+{
+  RUN(b_string_sprintf, 0);
+}
+
 //===----------------------------------------------------------------------===//
 // String Test
 //===----------------------------------------------------------------------===//
@@ -173,11 +178,6 @@ PAT_F(string_case, strchr1)
 PAT_F(string_case, strlen1)
 {
   RUN(b_string_strlen, 0);
-}
-
-PAT_F(string_case, sprintf1)
-{
-  RUN(b_string_sprintf, 0);
 }
 
 //===----------------------------------------------------------------------===//

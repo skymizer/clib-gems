@@ -1,32 +1,19 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99, 2000, 2002, 2006
-     Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
-
+/*===- sprintf.c ----------------------------------------------------------===//
+//
+//                          The LibC-Bench Project
+//
+//  This file is distributed under the GPLv2 License.
+//  See LICENSE for details.
+//
+//===----------------------------------------------------------------------===*/
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <float.h>
 
-
-/* This page is covered by the following copyright: */
-
-/* (C) Copyright C E Chew
+/* This page is covered by the following copyright:
+ * (C) Copyright C E Chew
  *
  * Feel free to copy, use and distribute this software provided:
  *
@@ -40,7 +27,7 @@
 
 #define FORMAT "|%12.4f|%12.4e|%12.4g|\n"
 
-size_t b_string_sprintf(void *dummy)
+size_t b_stdio_sprintf(void *dummy)
 {
   static char shortstr[] = "Hi, Z.";
   static char longstr[] = "Good morning, Doctor Chandra.  This is Hal.  \
@@ -105,8 +92,6 @@ size_t b_string_sprintf(void *dummy)
   sprintf(output,"%g should be 10\n", 10.0);
   sprintf(output,"%g should be 0.02\n", 0.02);
 
-
-
   sprintf(output,"sprintf (\"%%hhu\", %u) = %hhu\n", UCHAR_MAX + 2, UCHAR_MAX + 2);
   sprintf(output,"sprintf (\"%%hu\", %u) = %hu\n", USHRT_MAX + 2, USHRT_MAX + 2);
   sprintf(output,"sprintf (\"%%hhi\", %i) = %hhi\n", UCHAR_MAX + 2, UCHAR_MAX + 2);
@@ -118,7 +103,6 @@ size_t b_string_sprintf(void *dummy)
   sprintf(output,"sprintf (\"%%1$hhi\", %2$i) = %1$hhi\n",
 	  					   UCHAR_MAX + 2, UCHAR_MAX + 2);
   sprintf(output,"sprintf (\"%%1$hi\", %2$i) = %1$hi\n", USHRT_MAX + 2, USHRT_MAX + 2);
-
 
   return 0;
 }
