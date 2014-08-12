@@ -8,6 +8,7 @@
 //===----------------------------------------------------------------------===//
 #include <pat/pat.h>
 #include <pat/PrettyResultPrinter.h>
+#include <pat/CSVResultPrinter.h>
 #include <time.h>
 #include <cassert>
 
@@ -29,6 +30,7 @@ void Test::run()
 void Test::Initialize(int* pArgc, char* pArgv[])
 {
   testing::UnitTest::self()->repeater().add(new PrettyResultPrinter());
+  testing::UnitTest::self()->repeater().add(new CSVResultPrinter());
 }
 
 void Test::RunAll()
