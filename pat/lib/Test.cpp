@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <string>
 #include <cstdlib>
+#include <algorithm>
 
 using namespace pat;
 
@@ -28,6 +29,22 @@ static inline void help(int pArgc, char* pArgv[])
                              << "Options:\n"
                              << "\t-c [file]  toutput CSV to [file]\n"
                              << "\t-h         Show this help manual\n";
+}
+
+static inline bool NotID(char pC)
+{
+  return (!isalnum(pC) && '_' != pC);
+}
+
+static inline void StrToCID(std::string& pString)
+{
+  if (pString.empty())
+    return;
+
+  if ('_' != pString[0] && !isalpha(pString[0]))
+    pString[0] = '_';
+
+  std::replace_if(pString.begin(), pString.end(), NotID, '_');
 }
 
 //===----------------------------------------------------------------------===//
@@ -74,10 +91,10 @@ void Test::Initialize(int* pArgc, char* pArgv[])
     testing::UnitTest::self()->repeater().add(new PrettyResultPrinter());
 
   // Choice runnable tests
-  Path progname(pArgv[0]);
-  progname = progname.filename();
-
-  if (!testing::UnitTest::self()->addRunCase(progname.native()))
+  Path arg0(pArgv[0]);
+  std::string progname(arg0.filename().native());
+  StrToCID(progname);
+  if (!testing::UnitTest::self()->addRunCase(progname))
     testing::UnitTest::self()->addAllRunCases();
 }
 
