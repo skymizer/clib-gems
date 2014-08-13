@@ -9,6 +9,7 @@
 #include <pat/pat.h>
 #include <pat/PrettyResultPrinter.h>
 #include <pat/CSVResultPrinter.h>
+#include <pat/Path.h>
 #include <time.h>
 #include <cassert>
 #include <unistd.h>
@@ -44,8 +45,6 @@ void Test::run()
 
 void Test::Initialize(int* pArgc, char* pArgv[])
 {
-  // Check program name
-
   // Choice printer
   int opt;
   std::string csv_file;
@@ -57,14 +56,15 @@ void Test::Initialize(int* pArgc, char* pArgv[])
       case 'h':
       default:
         help(*pArgc, pArgv);
-        exit(0);
+        return;
     }
   }
 
   if (!csv_file.empty()) {
     CSVResultPrinter* printer = new CSVResultPrinter();
-    if (printer->open(csv_file))
+    if (printer->open(csv_file)) {
       testing::UnitTest::self()->repeater().add(printer);
+    }
     else {
       testing::Log::getOStream() << "Failed to open file `" << csv_file << "`\n";
       delete printer;
@@ -72,6 +72,13 @@ void Test::Initialize(int* pArgc, char* pArgv[])
   }
   else
     testing::UnitTest::self()->repeater().add(new PrettyResultPrinter());
+
+  // Choice runnable tests
+  Path progname(pArgv[0]);
+  progname = progname.filename();
+
+  if (!testing::UnitTest::self()->addRunCase(progname.native()))
+    testing::UnitTest::self()->addAllRunCases();
 }
 
 void Test::RunAll()

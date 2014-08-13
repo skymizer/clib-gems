@@ -30,83 +30,13 @@ using namespace pat;
 #define PAT_PERFORM_LOOP_TIMES 1
 
 //===----------------------------------------------------------------------===//
-// Details of UnitTest
-//===----------------------------------------------------------------------===//
-testing::UnitTest::UnitTest()
-  : m_pCurrentInfo(NULL), m_NumOfTests(0), m_NumOfFails(0) {
-}
-
-testing::UnitTest::~UnitTest()
-{
-  CaseMap::iterator iCase, iEnd = m_CaseMap.end();
-  for (iCase = m_CaseMap.begin(); iCase != iEnd; ++iCase) {
-    delete iCase->second;
-  }
-}
-
-void testing::UnitTest::addTestInfo(const std::string& pCaseName,
-                                    const std::string& pTestName,
-                                    testing::TestFactoryBase& pFactory)
-{
-  CaseMap::iterator iCase = m_CaseMap.find(pCaseName);
-  TestCase* test_case;
-  if (iCase != m_CaseMap.end())
-    test_case = iCase->second;
-  else {
-    test_case = new TestCase(pCaseName);
-    m_CaseMap.insert(make_pair(pCaseName, test_case));
-  }
-  test_case->addTestInfo(pTestName, pFactory);
-  ++m_NumOfTests;
-}
-
-void testing::UnitTest::addTestPartResult(const TestPartResult& pPartResult)
-{
-  m_pCurrentInfo->addTestPartResult(pPartResult);
-  m_Repeater.OnTestPartResult(pPartResult);
-  if (testing::TestPartResult::kSuccess != pPartResult.type())
-    ++m_NumOfFails;
-}
-
-testing::PerfPartResult*
-testing::UnitTest::addPerfPartResult(const char* pFile, int pLine)
-{
-  /* XXX: */
-  m_Repeater.OnPerfPartResult(testing::PerfPartResult(pFile, pLine));
-  return m_pCurrentInfo->addPerfPartResult(pFile, pLine);
-}
-
-void testing::UnitTest::RunAll()
-{
-  m_Repeater.OnTestProgramStart(*this);
-
-  CaseMap::iterator iCase, iEnd = m_CaseMap.end();
-  for (iCase = m_CaseMap.begin(); iCase != iEnd; ++iCase) {
-    TestCase* test_case = iCase->second;
-    m_Repeater.OnTestCaseStart(*test_case);
-
-    TestCase::iterator it   = test_case->begin();
-    TestCase::iterator iEnd = test_case->end();
-    while (it != iEnd) {
-      (*it)->run();
-      ++it;
-    }
-
-    m_Repeater.OnTestCaseEnd(*test_case);
-  }
-
-  m_Repeater.OnTestProgramEnd(*this);
-}
-
-//===----------------------------------------------------------------------===//
 // Non-member function
 //===----------------------------------------------------------------------===//
 testing::TestInfo*
 testing::MakeAndRegisterTestInfo(const char* pCaseName, const char* pTestName,
                                  testing::TestFactoryBase* pFactory)
 {
-  testing::UnitTest::self()->addTestInfo(pCaseName, pTestName, *pFactory);
-  return testing::UnitTest::self()->getCurrentInfo();
+  return testing::UnitTest::self()->addTestInfo(pCaseName, pTestName, *pFactory);
 }
 
 std::string testing::GetBoolAssertionFailureMessage(
@@ -150,13 +80,17 @@ testing::PerfIterator::~PerfIterator()
   delete m_pPerf;
 }
 
-bool testing::PerfIterator::next()
+bool testing::PerfIterator::hasNext() const
+{
+  if (m_Counter >= PAT_PERFORM_LOOP_TIMES)
+    return false;
+  return true;
+}
+
+testing::PerfIterator& testing::PerfIterator::next()
 {
   ++m_Counter;
-  if (m_Counter >= PAT_PERFORM_LOOP_TIMES) {
-    return false;
-  }
-  return true;
+  return *this;
 }
 
 //===----------------------------------------------------------------------===//
@@ -200,13 +134,13 @@ testing::Interval testing::PerfPartResult::getPerfEventNum() const
   return m_PerfEventNum;
 }
 
-void testing::PerfPartResult::setPerformance(testing::Interval pTimerNum,
+void testing::PerfPartResult::setPerformance(testing::Interval pTimerNum, 
                                              testing::Interval pEventNum)
 {
   m_PerfTimerNum = pTimerNum;
   m_PerfEventNum = pEventNum;
   OStrStream os(m_Message);
-  os << pTimerNum << " ns";
+  os << pTimerNum << " ns;";
 }
 
 //===----------------------------------------------------------------------===//
@@ -256,11 +190,13 @@ testing::TestCase::~TestCase()
   }
 }
 
-void
+testing::TestInfo*
 testing::TestCase::addTestInfo(const std::string& pTestName,
                                testing::TestFactoryBase& pFactory)
 {
-  m_InfoList.push_back(new testing::TestInfo(this, pTestName, pFactory));
+  testing::TestInfo* info = new testing::TestInfo(this, pTestName, pFactory);
+  m_InfoList.push_back(info);
+  return info;
 }
 
 //===----------------------------------------------------------------------===//
@@ -292,7 +228,6 @@ void testing::TestInfo::run()
 {
   UnitTest& unittest = *UnitTest::self();
   Repeater& repeater = unittest.repeater();
-  unittest.setCurrentInfo(*this);
   pat::Test* test = m_pFactory->CreateTest();
   if (NULL != test) {
     repeater.OnSetUpStart(unittest);
@@ -370,12 +305,14 @@ pat::testing::AssertionResult::operator<<(
 // AssertHelper
 //===----------------------------------------------------------------------===//
 pat::testing::AssertHelper::AssertHelper(TestPartResult::Type pType,
-                                              const std::string& pFile,
-                                              int pLineOfCode,
-                                              const std::string& pMessage)
+                                         const std::string& pFile,
+                                         int pLineOfCode,
+                                         const std::string& pMessage)
   : m_Result(pType, pFile, pLineOfCode, pMessage) {
+  // m_Result is a TestPartResult
 }
 
+// Store a run-time result
 void pat::testing::AssertHelper::operator=(bool pValue) const
 {
   UnitTest::self()->addTestPartResult(m_Result);
@@ -433,56 +370,3 @@ testing::Log::FormatFileLocation(const std::string& pFileName, int pLoC)
 #endif  // _MSC_VER
   return result;
 }
-
-//===----------------------------------------------------------------------===//
-// Repeater
-//===----------------------------------------------------------------------===//
-testing::Repeater::Repeater()
-  : m_bForward(true) {
-}
-
-testing::Repeater::~Repeater()
-{
-  // Do nothing. Since we arn't the owner of Listeners.
-}
-
-void testing::Repeater::add(Listener* pListener)
-{
-  if (NULL != pListener) {
-    m_Listeners.push_back(pListener);
-  }
-}
-
-void testing::Repeater::release(Listener& pListener)
-{
-  ListenerList::iterator listener, lEnd = m_Listeners.end();
-  for (listener = m_Listeners.begin(); listener != lEnd; ++listener) {
-    if (*listener == &pListener) {
-      m_Listeners.erase(listener);
-      return;
-    }
-  }
-}
-
-#define PAT_REPEATER_METHOD(Name, ParamType) \
-void testing::Repeater::Name(const ParamType& pParam) { \
-  if (m_bForward) { \
-    ListenerList::iterator listener, lEnd = m_Listeners.end(); \
-    for (listener = m_Listeners.begin(); listener != lEnd; ++listener) { \
-      (*listener)->Name(pParam); \
-    } \
-  } \
-}
-
-PAT_REPEATER_METHOD(OnTestProgramStart, testing::UnitTest)
-PAT_REPEATER_METHOD(OnTestCaseStart, TestCase)
-PAT_REPEATER_METHOD(OnSetUpStart, UnitTest)
-PAT_REPEATER_METHOD(OnSetUpEnd, UnitTest)
-PAT_REPEATER_METHOD(OnTestStart, TestInfo)
-PAT_REPEATER_METHOD(OnTestPartResult, TestPartResult)
-PAT_REPEATER_METHOD(OnPerfPartResult, PerfPartResult)
-PAT_REPEATER_METHOD(OnTestEnd, TestInfo)
-PAT_REPEATER_METHOD(OnTearDownStart, UnitTest)
-PAT_REPEATER_METHOD(OnTearDownEnd, UnitTest)
-PAT_REPEATER_METHOD(OnTestCaseEnd, TestCase)
-PAT_REPEATER_METHOD(OnTestProgramEnd, UnitTest)

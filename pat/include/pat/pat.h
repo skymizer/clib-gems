@@ -16,10 +16,6 @@
 
 #define PAT_VERNUM 0x24
 
-#define PAT_PUBLIC __attribute__ ((visibility ("default")))
-#define PAT_LOCAL  __attribute__ ((visibility ("hidden")))
-
-
 namespace pat {
 class Test;
 
@@ -79,19 +75,23 @@ pat::testing::TestInfo* const PAT_TEST_CLASS_NAME_(case_name, test_name)\
             PAT_TEST_CLASS_NAME_(case_name, test_name)>);\
 void PAT_TEST_CLASS_NAME_(case_name, test_name)::TestBody()
 
-// The message handling macros.
+// The message handling macros. The assignment is used to trigger recording a
+// partial result.
 #define PAT_MESSAGE_AT(file, line, message, result_type) \
   pat::testing::AssertHelper(result_type, file, line, message) = true\
 
 #define PAT_MESSAGE(message, result_type) \
   PAT_MESSAGE_AT(__FILE__, __LINE__, message, result_type)
 
+// PAT_FATAL_FAILURE is a run-time result of fatal error
 #define PAT_FATAL_FAILURE(message) \
   return PAT_MESSAGE(message, pat::testing::TestPartResult::kFatalFailure)
 
+// PAT_NON_FATAL_FAILURE is a run-time result of expectation error
 #define PAT_NONFATAL_FAILURE(message) \
   PAT_MESSAGE(message, pat::testing::TestPartResult::kNonFatalFailure)
 
+// PAT_SUCCESS is a run-time result of success.
 #define PAT_SUCCESS(message) \
   PAT_MESSAGE(message, pat::testing::TestPartResult::kSuccess)
 
@@ -107,6 +107,8 @@ void PAT_TEST_CLASS_NAME_(case_name, test_name)::TestBody()
 // Implements Boolean test assertions such as EXPECT_TRUE. expression can be
 // either a boolean expression or an AssertionResult. text is a textual
 // represenation of expression as it was passed into the EXPECT_TRUE.
+//
+// The last parameter 'fail' is the run-time result of the testing
 #define PAT_TEST_BOOLEAN(expression, text, actual, expected, fail) \
   PAT_UNAMBIGUOUS_ELSE_BLOCKER \
   if (const pat::testing::AssertionResult _ar_ = \
@@ -117,6 +119,8 @@ void PAT_TEST_CLASS_NAME_(case_name, test_name)::TestBody()
         _ar_, text, #actual, #expected))
 
 // Implements Predicate test assertions such as EXPECT_EQ.
+//
+// The last parameter 'fail' is the run-time result of the testing
 #define PAT_TEST_PREDICATE(expression, text, actual, expected, fail) \
   PAT_UNAMBIGUOUS_ELSE_BLOCKER \
   if (const pat::testing::AssertionResult _ar_ = \
@@ -150,7 +154,7 @@ template<typename SingleTest> struct TestFactory : public TestFactoryBase {
  *  \brief PerfIterator is used to calculate the computing time of a
  *  performance test.
  */
-class PAT_PUBLIC PerfIterator
+class PerfIterator
 {
 public:
   /// @param pFileName the source file name.
@@ -161,8 +165,10 @@ public:
   ~PerfIterator();
 
   /// increase counter
+  PerfIterator& next();
+
   /// @return true if we should go to the next step.
-  bool next();
+  bool hasNext() const;
 
 private:
   int m_Counter;
@@ -174,7 +180,7 @@ private:
 /** \class PartResult
  *  \brief The partial result of a single test
  */
-class PAT_PUBLIC PartResult
+class PartResult
 {
 public:
   PartResult(const std::string& pFileName, int pLoC);
@@ -202,7 +208,7 @@ protected:
 /** \class TestPartResult
  *  \brief The partial result of a single test
  */
-class PAT_PUBLIC TestPartResult : public PartResult
+class TestPartResult : public PartResult
 {
 public:
   enum Type {
@@ -224,7 +230,7 @@ private:
 /** \class TestPerfPartResult
  *  \brief The performance result
  */
-class PAT_PUBLIC PerfPartResult : public PartResult
+class PerfPartResult : public PartResult
 {
 public:
   PerfPartResult(const std::string& pFileName, int pLoC);
@@ -244,7 +250,7 @@ private:
  *
  *  TestResult concludes the result of a single test in summary.
  */
-class PAT_PUBLIC TestResult : private pat::testing::internal::Uncopyable
+class TestResult : private pat::testing::internal::Uncopyable
 {
 public:
   typedef std::vector<const TestPartResult*> Reliability;
@@ -282,7 +288,7 @@ private:
 /** \class TestCase
  *  \brief The information of a test case (a set of tests)
  */
-class PAT_PUBLIC TestCase
+class TestCase
 {
 private:
   typedef std::vector<testing::TestInfo*> InfoList;
@@ -301,8 +307,8 @@ public:
 
   ~TestCase();
 
-  void addTestInfo(const std::string& pTestName,
-                   testing::TestFactoryBase& pFactory);
+  testing::TestInfo* addTestInfo(const std::string& pTestName,
+                                 testing::TestFactoryBase& pFactory);
 
   const std::string& getCaseName() const { return m_CaseName; }
 
@@ -314,12 +320,14 @@ private:
 };
 
 /** \class TestInfo
- *  \brief The information of a single test
+ *  \brief The information of a single test.
  *
  *  TestInfo stores the information of a single test. A test case contains
  *  multiple tests which is represented by TestInfos.
+ *
+ *  TestInfo is created at static time and gathers partial results at run-time.
  */
-class PAT_PUBLIC TestInfo
+class TestInfo
 {
 public:
   TestInfo(TestCase* pTestCase,
@@ -333,6 +341,7 @@ public:
   const std::string& getTestName() const { return m_TestName; }
   const TestResult& result() const { return m_Result; }
 
+  /// run - run a single test function and notifiy repeater.
   void run();
 
   void addTestPartResult(const TestPartResult& pResult);
@@ -363,7 +372,7 @@ private:
 /** \class AssertionResult
  *  \brief The result of an assertion.
  */
-class PAT_PUBLIC AssertionResult
+class AssertionResult
 {
 public:
   AssertionResult(const AssertionResult& other);
@@ -391,7 +400,7 @@ private:
 /** \class AssertHelper
  *  \brief AssertHelper carries all information to UnitTest.
  */
-class PAT_PUBLIC AssertHelper
+class AssertHelper
 {
 public:
   AssertHelper(TestPartResult::Type pType,
@@ -407,13 +416,11 @@ private:
   TestPartResult m_Result;
 };
 
-PAT_PUBLIC
 TestInfo* MakeAndRegisterTestInfo(
     const char* pCaseName,
     const char* pTestName,
     TestFactoryBase* pFactory);
 
-PAT_PUBLIC
 std::string GetBoolAssertionFailureMessage(
     const AssertionResult& pAssertionResult,
     const char* pExpressionText,
@@ -444,7 +451,7 @@ std::string GetPredAssertionFailureMessage(
 /** \class Listener
  *  \brief Listener provides interfaces for objects who wants UnitTest's events.
  */
-class PAT_PUBLIC Listener
+class Listener
 {
 public:
   virtual ~Listener() { }
@@ -486,7 +493,7 @@ public:
   virtual void OnTestProgramEnd(const UnitTest& pUnitTest) {}
 };
 
-class PAT_PUBLIC Log
+class Log
 {
 public:
   enum Severity {
@@ -517,7 +524,7 @@ private:
 /** \class Repeater
  *  \brief Repeater dispatches events to all listeners.
  */
-class PAT_PUBLIC Repeater : public Listener
+class Repeater : public Listener
 {
 public:
   typedef std::vector<Listener*> ListenerList;
@@ -556,11 +563,13 @@ private:
 //===----------------------------------------------------------------------===//
 // UnitTest
 //===----------------------------------------------------------------------===//
-class PAT_PUBLIC UnitTest
+class UnitTest
 {
 private:
-  // TODO: Performance
   typedef std::map<std::string, testing::TestCase*> CaseMap;
+
+  // RunCases stores all runnable cases
+  typedef std::vector<testing::TestCase*> RunCases;
 
 public:
   static UnitTest* self() {
@@ -570,17 +579,23 @@ public:
 
   void RunAll();
 
-  void addTestInfo(const std::string& pCaseName,
-                   const std::string& pTestName,
-                   testing::TestFactoryBase& pFactory);
+  /// addRunCase - add the test case to run
+  /// @return true if the case exists (be stored at static-time).
+  bool addRunCase(const std::string& pCaseName);
 
+  /// addAllRunCase - add all test cases to run
+  void addAllRunCases();
+
+  /// addTestInfo - store a TestInfo at static-time
+  testing::TestInfo* addTestInfo(const std::string& pCaseName,
+                                 const std::string& pTestName,
+                                 testing::TestFactoryBase& pFactory);
+
+  /// addTestPartResult - add partial test result at run-time.
   void addTestPartResult(const testing::TestPartResult& pPartResult);
+
+  /// addPerfPartResult - add partial performance result at run-time.
   testing::PerfPartResult* addPerfPartResult(const char* pFile, int pLine);
-
-  const testing::TestInfo* getCurrentInfo() const { return m_pCurrentInfo; }
-  testing::TestInfo*       getCurrentInfo()       { return m_pCurrentInfo; }
-
-  void setCurrentInfo(testing::TestInfo& pInfo) { m_pCurrentInfo = &pInfo; }
 
   const Repeater& repeater() const { return m_Repeater; }
   Repeater&       repeater()       { return m_Repeater; }
@@ -588,6 +603,8 @@ public:
   unsigned int getNumOfCases() const { return m_CaseMap.size(); }
   unsigned int getNumOfTests() const { return m_NumOfTests; }
   unsigned int getNumOfFails() const { return m_NumOfFails; }
+
+  unsigned int getNumOfRunCases() const { return m_RunCases.size(); }
 
 private:
   UnitTest();
@@ -597,6 +614,7 @@ private:
 
 private:
   CaseMap m_CaseMap;
+  RunCases m_RunCases;
   testing::Repeater m_Repeater;
   testing::TestInfo* m_pCurrentInfo;
   unsigned int m_NumOfTests;
@@ -628,7 +646,7 @@ private:
  *  PAT_C( FooTest, Bar1) { ... }
  *  PAT_C( FooTest, Bar2) { ... }
  */
-class PAT_PUBLIC Test : private pat::testing::internal::Uncopyable
+class Test : private pat::testing::internal::Uncopyable
 {
 friend class pat::testing::TestInfo;
 private:
@@ -740,8 +758,9 @@ public:
 #define ASSERT_GT(actual, expected) \
   PAT_ASSERT_PRED((actual > expected), actual, expected)
 
-#define PERFORM for(pat::testing::PerfIterator __loop(__FILE__, __LINE__) \
-                        ; __loop.next() ; )
+#define PERFORM for (pat::testing::PerfIterator __loop(__FILE__, __LINE__); \
+                                                __loop.hasNext(); \
+                                                __loop.next() )
 
 } // namespace of pat
 
