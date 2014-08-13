@@ -36,161 +36,251 @@ int run_bench(size_t (*bench)(void *), void *params)
   PERFORM { run_bench((_func_), (void*)(_params_)); }
 
 //===----------------------------------------------------------------------===//
-// Malloc Test Functions
+// vfscanf
 //===----------------------------------------------------------------------===//
-PAT_F(malloc_case, sparse_1)
-{
-  RUN(b_malloc_sparse, 0);
-}
-
-PAT_F(malloc_case, bubble_1)
-{
-  RUN(b_malloc_bubble, 0);
-}
-
-PAT_F(malloc_case, tiny1)
-{
-  RUN(b_malloc_tiny1, 0);
-}
-
-PAT_F(malloc_case, tiny2)
-{
-  RUN(b_malloc_tiny2, 0);
-}
-
-PAT_F(malloc_case, big1)
-{
-  RUN(b_malloc_big1, 0);
-}
-
-PAT_F(malloc_case, big2)
-{
-  RUN(b_malloc_big2, 0);
-}
-
-PAT_F(malloc_case, thread_stress_1)
-{
-  RUN(b_malloc_thread_stress, 0);
-}
-
-PAT_F(malloc_case, thread_local_1)
-{
-  RUN(b_malloc_thread_local, 0);
-}
-
-//===----------------------------------------------------------------------===//
-// Pthread Test Functions
-//===----------------------------------------------------------------------===//
-PAT_F(pthread_case, createjoin1)
-{
-  RUN(b_pthread_createjoin_serial1, 0);
-}
-
-PAT_F(pthread_case, createjoin2)
-{
-  RUN(b_pthread_createjoin_serial2, 0);
-}
-
-PAT_F(pthread_case, create1)
-{
-  RUN(b_pthread_create_serial1, 0);
-}
-
-PAT_F(pthread_case, uselesslock)
-{
-  RUN(b_pthread_uselesslock, 0);
-}
-
-//===----------------------------------------------------------------------===//
-// Regular Expression
-//===----------------------------------------------------------------------===//
-PAT_F(regex_case, compile1)
-{
-  RUN(b_regex_compile, "(a|b|c)*d*b");
-}
-
-PAT_F(regex_case, search1)
-{
-  RUN(b_regex_search, "(a|b|c)*d*b");
-}
-
-PAT_F(regex_case, search2)
-{
-  RUN(b_regex_search, "a{25}b");
-}
-
-//===----------------------------------------------------------------------===//
-// Std I/O Test
-//===----------------------------------------------------------------------===//
-PAT_F(stdio_case, putcgetc)
-{
-  RUN(b_stdio_putcgetc, 0);
-}
-
-PAT_F(stdio_case, pubcgetc_unlocked)
-{
-  RUN(b_stdio_putcgetc_unlocked, 0);
-}
-
-PAT_F(stdio_case, sprintf1)
+PAT_F(vfscanf, sprintf1)
 {
   RUN(b_stdio_sprintf, 0);
 }
 
 //===----------------------------------------------------------------------===//
-// String Test
+// putc
 //===----------------------------------------------------------------------===//
-PAT_F(string_case, strstr1)
+PAT_F(putc, putcgetc)
 {
-  RUN(b_string_strstr, "abcdefghijklmnopqrstuvwxyz");
+  RUN(b_stdio_putcgetc, 0);
 }
 
-PAT_F(string_case, strstr2)
+PAT_F(putc, pubcgetc_unlocked)
 {
-  RUN(b_string_strstr, "azbycxdwevfugthsirjqkplomn");
-}
-
-PAT_F(string_case, strstr3)
-{
-  RUN(b_string_strstr, "aaaaaaaaaaaaaacccccccccccc");
-}
-
-PAT_F(string_case, strstr4)
-{
-  RUN(b_string_strstr, "aaaaaaaaaaaaaaaaaaaaaaaaac");
-}
-
-PAT_F(string_case, strstr5)
-{
-  RUN(b_string_strstr, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaac");
-}
-
-PAT_F(string_case, memset1)
-{
-  RUN(b_string_memset, 0);
-}
-
-PAT_F(string_case, strchr1)
-{
-  RUN(b_string_strchr, 0);
-}
-
-PAT_F(string_case, strlen1)
-{
-  RUN(b_string_strlen, 0);
+  RUN(b_stdio_putcgetc_unlocked, 0);
 }
 
 //===----------------------------------------------------------------------===//
-// UTF-8 Test
+// mbrtowc
 //===----------------------------------------------------------------------===//
-PAT_F(utf8_case, bigbuf)
+PAT_F(utf8_case, one_by_one)
+{
+  RUN(b_utf8_onebyone, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// mbstowcs
+//===----------------------------------------------------------------------===//
+PAT_F(mbstowcs, bigbuf)
 {
   RUN(b_utf8_bigbuf, 0);
 }
 
-PAT_F(utf8_case, one_by_one)
+//===----------------------------------------------------------------------===//
+// getc
+//===----------------------------------------------------------------------===//
+PAT_F(getc, putcgetc)
+{
+  RUN(b_stdio_putcgetc, 0);
+}
+
+PAT_F(getc, pubcgetc_unlocked)
+{
+  RUN(b_stdio_putcgetc_unlocked, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// strstr
+//===----------------------------------------------------------------------===//
+PAT_F(strstr, strstr1)
+{
+  RUN(b_string_strstr, "abcdefghijklmnopqrstuvwxyz");
+}
+
+PAT_F(strstr, strstr2)
+{
+  RUN(b_string_strstr, "azbycxdwevfugthsirjqkplomn");
+}
+
+PAT_F(strstr, strstr3)
+{
+  RUN(b_string_strstr, "aaaaaaaaaaaaaacccccccccccc");
+}
+
+PAT_F(strstr, strstr4)
+{
+  RUN(b_string_strstr, "aaaaaaaaaaaaaaaaaaaaaaaaac");
+}
+
+PAT_F(strstr, strstr5)
+{
+  RUN(b_string_strstr, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaac");
+}
+
+//===----------------------------------------------------------------------===//
+// regex
+//===----------------------------------------------------------------------===//
+PAT_F(regex, search1)
+{
+  RUN(b_regex_search, "(a|b|c)*d*b");
+}
+
+PAT_F(regex, search2)
+{
+  RUN(b_regex_search, "a{25}b");
+}
+
+PAT_F(regex, compile1)
+{
+  RUN(b_regex_compile, "(a|b|c)*d*b");
+}
+
+//===----------------------------------------------------------------------===//
+// pthread_mutex_lock
+//===----------------------------------------------------------------------===//
+PAT_F(pthread_mutex_lock, createjoin1)
+{
+  RUN(b_pthread_createjoin_serial1, 0);
+}
+
+PAT_F(pthread_mutex_lock, createjoin2)
+{
+  RUN(b_pthread_createjoin_serial2, 0);
+}
+
+PAT_F(pthread_mutex_lock, create1)
+{
+  RUN(b_pthread_create_serial1, 0);
+}
+
+PAT_F(pthread_mutex_lock, uselesslock)
+{
+  RUN(b_pthread_uselesslock, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// malloc
+//===----------------------------------------------------------------------===//
+PAT_F(malloc, sparse_1)
+{
+  RUN(b_malloc_sparse, 0);
+}
+
+PAT_F(malloc, bubble_1)
+{
+  RUN(b_malloc_bubble, 0);
+}
+
+PAT_F(malloc, tiny1)
+{
+  RUN(b_malloc_tiny1, 0);
+}
+
+PAT_F(malloc, tiny2)
+{
+  RUN(b_malloc_tiny2, 0);
+}
+
+PAT_F(malloc, big1)
+{
+  RUN(b_malloc_big1, 0);
+}
+
+PAT_F(malloc, big2)
+{
+  RUN(b_malloc_big2, 0);
+}
+
+PAT_F(malloc, thread_stress_1)
+{
+  RUN(b_malloc_thread_stress, 0);
+}
+
+PAT_F(malloc, thread_local_1)
+{
+  RUN(b_malloc_thread_local, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// genops
+//===----------------------------------------------------------------------===//
+PAT_F(genops, putcgetc)
+{
+  RUN(b_stdio_putcgetc, 0);
+}
+
+PAT_F(genops, pubcgetc_unlocked)
+{
+  RUN(b_stdio_putcgetc_unlocked, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// pthread_create
+//===----------------------------------------------------------------------===//
+PAT_F(pthread_create, createjoin1)
+{
+  RUN(b_pthread_createjoin_serial1, 0);
+}
+
+PAT_F(pthread_create, createjoin2)
+{
+  RUN(b_pthread_createjoin_serial2, 0);
+}
+
+PAT_F(pthread_create, create1)
+{
+  RUN(b_pthread_create_serial1, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// rawmemchr
+//===----------------------------------------------------------------------===//
+// XXX
+
+//===----------------------------------------------------------------------===//
+// strops
+//===----------------------------------------------------------------------===//
+// XXX
+
+//===----------------------------------------------------------------------===//
+// isoc99_vsscanf
+//===----------------------------------------------------------------------===//
+// XXX
+
+//===----------------------------------------------------------------------===//
+// dl-profstub
+//===----------------------------------------------------------------------===//
+PAT_F(dl_profstub, one_by_one)
 {
   RUN(b_utf8_onebyone, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// gconv_simple
+//===----------------------------------------------------------------------===//
+PAT_F(gconv_simple, one_by_one)
+{
+  RUN(b_utf8_onebyone, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// memset
+//===----------------------------------------------------------------------===//
+PAT_F(memset, memset1)
+{
+  RUN(b_string_memset, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// strchr
+//===----------------------------------------------------------------------===//
+PAT_F(strcgr, strchr1)
+{
+  RUN(b_string_strchr, 0);
+}
+
+//===----------------------------------------------------------------------===//
+// strlen
+//===----------------------------------------------------------------------===//
+PAT_F(strlen, strlen1)
+{
+  RUN(b_string_strlen, 0);
 }
 
 /** \fn main
