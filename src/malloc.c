@@ -129,6 +129,8 @@ size_t b_malloc_thread_stress(void *dummy)
 	pthread_t td1, td2;
 	void *res;
 	int i;
+	for (i=0; i<SH_COUNT; ++i)
+		pthread_mutex_init(&foo[i].lock, NULL);
 
 	pthread_create(&td1, 0, stress, foo);
 	pthread_create(&td2, 0, stress, foo);
@@ -144,6 +146,10 @@ size_t b_malloc_thread_local(void *dummy)
 	pthread_t td1, td2;
 	void *res;
 	int i;
+	for (i=0; i<SH_COUNT; ++i) {
+		pthread_mutex_init(&foo1[i].lock, NULL);
+		pthread_mutex_init(&foo2[i].lock, NULL);
+	}
 
 	pthread_create(&td1, 0, stress, foo1);
 	pthread_create(&td2, 0, stress, foo2);
