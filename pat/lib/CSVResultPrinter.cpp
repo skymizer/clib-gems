@@ -31,7 +31,7 @@ bool CSVResultPrinter::open(const std::string& pFileName)
     return false;
 
   m_OStream.open(pFileName.c_str(), std::ostream::out | std::ostream::app);
-  return m_OStream.is_open();
+  return m_OStream.good();
 }
 
 void CSVResultPrinter::OnTestEnd(const testing::TestInfo& pTestInfo)
@@ -47,5 +47,6 @@ void CSVResultPrinter::OnTestEnd(const testing::TestInfo& pTestInfo)
       if (perf != pEnd)
         m_OStream << ",";
     }
+    m_OStream << std::endl;
   }
 }
