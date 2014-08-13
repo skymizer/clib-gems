@@ -40,7 +40,7 @@ SOURCES = $(addprefix $(SRC_DIR)/, $(addsuffix .c,$(CORE_FILES)))
 OBJECTS = $(addprefix $(OBJ_DIR)/, $(addsuffix .o,$(CORE_FILES)))
 
 PAT_DIR = ./pat
-PAT_FILES = Color Test PrettyResultPrinter CSVResultPrinter pat ManagedStatic Timer Perf StringRef
+PAT_FILES = Color Test PrettyResultPrinter CSVResultPrinter pat ManagedStatic Timer Perf StringRef Path
 PAT_SOURCES = $(addprefix $(PAT_DIR)/lib/, $(addsuffix .cpp,$(PAT_FILES)))
 PAT_OBJECTS = $(addprefix $(OBJ_DIR)/pat/, $(addsuffix .o,$(PAT_FILES)))
 PAT_INCLUDES = -I$(PAT_DIR)/include -I$(PORT_DIR)
