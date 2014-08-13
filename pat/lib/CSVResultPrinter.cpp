@@ -41,6 +41,7 @@ void CSVResultPrinter::OnTestEnd(const testing::TestInfo& pTestInfo)
                                       pTestInfo.result().performance().begin();
     testing::TestResult::Performance::const_iterator pEnd =
                                       pTestInfo.result().performance().end();
+    m_OStream << pTestInfo.getTestName() << ",";
     while (perf != pEnd) {
       m_OStream << (*perf)->getTimerNum();
       ++perf;
