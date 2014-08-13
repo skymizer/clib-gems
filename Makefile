@@ -49,11 +49,35 @@ PAT_INCLUDES = -I$(PAT_DIR)/include -I$(PORT_DIR)
 #===---------------------------------------------------------------------===# 
 # compile
 #===---------------------------------------------------------------------===# 
-.PHONY: all libpat create_folders
+.PHONY: all libpat create_folders gen_cases compile
 
-all: create_folders $(OBJECTS) libpat
+all: compile gen_cases
+
+compile: create_folders $(OBJECTS) libpat
 	$(CXX) $(CXXFLAGS) -c -o $(OBJ_DIR)/main.o $(SRC_DIR)/main.cpp $(PAT_INCLUDES)
-	$(CXX) $(LDFLAGS) $(XLDFLAGS) -o libc-bench $(OBJECTS) $(OBJ_DIR)/main.o -L$(OBJ_DIR) -lpat -lpthread
+	$(CXX) $(LDFLAGS) $(XLDFLAGS) -o $(OUTPUT) $(OBJECTS) $(OBJ_DIR)/main.o -L$(OBJ_DIR) -lpat -lpthread
+
+gen_cases:
+	$(MKDIR) ./bin
+	$(COPY) $(OUTPUT) ./bin/vfscanf
+	$(COPY) $(OUTPUT) ./bin/putc
+	$(COPY) $(OUTPUT) ./bin/mbrtowc
+	$(COPY) $(OUTPUT) ./bin/mbstowcs
+	$(COPY) $(OUTPUT) ./bin/getc
+	$(COPY) $(OUTPUT) ./bin/strstr
+	$(COPY) $(OUTPUT) ./bin/regex
+	$(COPY) $(OUTPUT) ./bin/pthread_mutex_lock
+	$(COPY) $(OUTPUT) ./bin/malloc
+	$(COPY) $(OUTPUT) ./bin/genops
+	$(COPY) $(OUTPUT) ./bin/pthread_create
+	$(COPY) $(OUTPUT) ./bin/rawmemchr
+	$(COPY) $(OUTPUT) ./bin/strops
+	$(COPY) $(OUTPUT) ./bin/isoc99_vsscanf
+	$(COPY) $(OUTPUT) ./bin/dl-profstub
+	$(COPY) $(OUTPUT) ./bin/gconv_simple
+	$(COPY) $(OUTPUT) ./bin/memset
+	$(COPY) $(OUTPUT) ./bin/strchr
+	$(COPY) $(OUTPUT) ./bin/strlen
 
 create_folders:
 	$(MKDIR) $(OBJ_DIR)
@@ -72,4 +96,4 @@ $(OBJ_DIR)/pat/%.o: $(PAT_DIR)/lib/%.cpp
 # Cleaning
 #===---------------------------------------------------------------------===# 
 clean:
-	$(RM) $(OBJ_DIR) libc-bench
+	$(RM) $(OBJ_DIR) libc-bench bin
