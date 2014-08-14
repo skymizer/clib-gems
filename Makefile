@@ -35,7 +35,7 @@ include $(PORT_DIR)/portme.mak
 #===---------------------------------------------------------------------===# 
 SRC_DIR = ./src
 OBJ_DIR = ./objs
-CORE_FILES = malloc pthread regex stdio string utf8 sprintf
+CORE_FILES = malloc pthread regex stdio string utf8 sprintf sscanf
 SOURCES = $(addprefix $(SRC_DIR)/, $(addsuffix .c,$(CORE_FILES)))
 OBJECTS = $(addprefix $(OBJ_DIR)/, $(addsuffix .o,$(CORE_FILES)))
 
@@ -78,6 +78,7 @@ gen_cases:
 	$(COPY) $(OUTPUT) ./bin/memset
 	$(COPY) $(OUTPUT) ./bin/strchr
 	$(COPY) $(OUTPUT) ./bin/strlen
+	$(COPY) $(OUTPUT) ./bin/sscanf
 
 create_folders:
 	$(MKDIR) $(OBJ_DIR)
