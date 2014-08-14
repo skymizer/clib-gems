@@ -39,7 +39,7 @@ size_t b_pthread_create_serial1(void *dummy)
 	pthread_t td;
 	pthread_attr_init(&attr);
 	pthread_attr_setstacksize(&attr, 16384);
-	for (i=0; i<2500; i++)
+	for (i=0; i<1000; i++)
 		pthread_create(&td, &attr, emptyfunc, 0);
 	return 0;
 }
