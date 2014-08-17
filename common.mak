@@ -1,6 +1,6 @@
 #===- common.mak --------------------------------------------------------===#
 #
-#                       The Libc-Bench Project
+#                       The C Library Gems Project
 #
 #  This file is distributed under the GPLv2 License.
 #  See LICENSE for details.
@@ -11,4 +11,4 @@
 MKDIR   = mkdir -p
 RM      = rm -rf
 COPY    = cp
-OUTPUT  = libc-bench
+OUTPUT  = clib-gems

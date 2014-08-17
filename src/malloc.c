@@ -1,3 +1,11 @@
+//===- malloc.c -----------------------------------------------------------===//
+//
+//                          The C Library Gems
+//
+//  This file is distributed under the GPLv2 License.
+//  See LICENSE for details.
+//
+//===----------------------------------------------------------------------===//
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
