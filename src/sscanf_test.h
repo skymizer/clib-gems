@@ -1,6 +1,6 @@
 /*===- sscanf.h ----------------------------------------------------------===//
 //
-//                          The LibC-Bench Project
+//                          The C Library Gems
 //
 //  This file is distributed under the GPLv2 License.
 //  See LICENSE for details.
