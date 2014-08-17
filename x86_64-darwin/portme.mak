@@ -1,6 +1,6 @@
 #===- common.mak --------------------------------------------------------===#  
 #
-#                       The Libc-Bench Project
+#                       The C Library Gems
 #
 #  This file is distributed under the GPLv2 License.
 #  See LICENSE for details.
@@ -17,7 +17,8 @@ AR      = ar rcs
 #===---------------------------------------------------------------------===#
 CFLAGS    = -O2 -g
 CXXFLAGS  = -O2 -g
-LDFLAGS   =
+LDFLAGS   = -lpthread
 XCFLAGS   =
 XCXXFLAGS =
-XLDFLAGS  =
+XLDFLAGS_BEGIN =
+XLDFLAGS_END   =

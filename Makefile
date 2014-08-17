@@ -55,7 +55,9 @@ all: compile gen_cases
 
 compile: create_folders $(OBJECTS) libpat
 	$(CXX) $(CXXFLAGS) -c -o $(OBJ_DIR)/main.o $(SRC_DIR)/main.cpp $(PAT_INCLUDES)
-	$(CXX) $(LDFLAGS) $(XLDFLAGS) -o $(OUTPUT) $(OBJECTS) $(OBJ_DIR)/main.o -L$(OBJ_DIR) -lpat -lpthread
+	$(CXX) $(XLDFLAGS_BEGIN) \
+		-o $(OUTPUT) $(OBJECTS) $(OBJ_DIR)/main.o -L$(OBJ_DIR) -lpat $(LDFLAGS) \
+		$(XLDFLAGS_END)
 
 gen_cases:
 	$(MKDIR) ./bin
