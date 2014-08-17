@@ -97,4 +97,4 @@ $(OBJ_DIR)/pat/%.o: $(PAT_DIR)/lib/%.cpp
 # Cleaning
 #===---------------------------------------------------------------------===# 
 clean:
-	$(RM) $(OBJ_DIR) libc-bench bin
+	$(RM) $(OBJ_DIR) $(OUTPUT) bin
