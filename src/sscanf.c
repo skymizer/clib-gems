@@ -5,6 +5,8 @@
 //  This file is distributed under the GPLv2 License.
 //  See LICENSE for details.
 //
+//  Copy from eglibc-2.17/stdio-common/tst-sscanf.c
+//
 //===----------------------------------------------------------------------===*/
 
 #include <stdlib.h>
