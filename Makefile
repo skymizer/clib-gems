@@ -36,8 +36,8 @@ include $(PORT_DIR)/portme.mak
 SRC_DIR = ./src
 OBJ_DIR = ./objs
 CORE_FILES = malloc pthread regex stdio string utf8 sprintf sscanf
-SOURCES = $(addprefix $(SRC_DIR)/, $(addsuffix .c,$(CORE_FILES)))
-OBJECTS = $(addprefix $(OBJ_DIR)/, $(addsuffix .o,$(CORE_FILES)))
+SOURCES = $(addprefix $(SRC_DIR)/, $(addsuffix _test.c,$(CORE_FILES)))
+OBJECTS = $(addprefix $(OBJ_DIR)/, $(addsuffix _test.o,$(CORE_FILES)))
 
 PAT_DIR = ./pat
 PAT_FILES = Color Test PrettyResultPrinter CSVResultPrinter pat \
@@ -58,6 +58,8 @@ compile: create_folders $(OBJECTS) libpat
 	$(CXX) $(XLDFLAGS_BEGIN) \
 		-o $(OUTPUT) $(OBJECTS) $(OBJ_DIR)/main.o -L$(OBJ_DIR) -lpat $(LDFLAGS) \
 		$(XLDFLAGS_END)
+
+-include $(PORT_DIR)/rules.mak
 
 gen_cases:
 	$(MKDIR) ./bin
